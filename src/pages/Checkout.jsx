@@ -93,7 +93,7 @@ const Checkout = () => {
       setIsConfirmed(true);
     }
   };
-
+  
   useEffect(() => {
     const tableBody = document.querySelector("#productTable tbody");
     const totalPriceElement = document.getElementById("totalPrice");
@@ -132,6 +132,32 @@ const Checkout = () => {
       )}`;
     }
   }, [products]);
+
+
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("");
+
+  const handlePaymentMethodChange = (method) => {
+    setSelectedPaymentMethod(method);
+  };
+
+  const handlePayment = () => {
+    Swal.fire({
+      title: 'Processing Payment',
+      text: `Your payment method is ${selectedPaymentMethod}`,
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Proceed',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Payment Successful',
+          text: 'Your payment has been processed successfully!',
+          icon: 'success'
+        });
+      }
+    });
+  };
 
   return (
     <div className="font-poppins">
@@ -270,11 +296,12 @@ const Checkout = () => {
               <h3 className="text-xl text-left text-white font-bold mb-0 p-4">
                 Payment Method
               </h3>
-              <PaymentMethod />
+              <PaymentMethod selectedPaymentMethod={selectedPaymentMethod} onChange={handlePaymentMethodChange} />
 
               <div className="p-4 mt-4">
                 <button
                   type="submit"
+                  onClick={handlePayment}
                   className="text-white bg-[#F4991A] hover:bg-[#f6aa40] focus:ring-4 focus:outline-none focus:ring-[#facc8d] font-bold rounded-lg text-sm w-full sm:w-auto sm:px-40 sm:py-3.5 px-1 py-2.5 text-center disabled:bg-opacity-100"
                 >
                   Confirm and Pay
